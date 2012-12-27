@@ -4,3 +4,4 @@ composer.lock
 composer.phar
 silex.log
 *.swp
+session.vim
