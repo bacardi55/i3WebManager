@@ -1,7 +1,9 @@
 /vendor/
 /cache/
+/src/b55/Resources/i3Config.yml
 composer.lock
 composer.phar
 silex.log
 *.swp
 session.vim
+

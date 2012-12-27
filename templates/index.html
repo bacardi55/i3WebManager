@@ -4,7 +4,7 @@
   <h1>Welcome to the i3 Web Manager.</h1>
 
   {# No config found #}
-  {% if (config == null) %}
+  {% if (configs == null) %}
     <p>No previous configuration was found, do you want to create it ?</p>
     <ul>
       <li><a href="config/new">Create new config</a></li>
@@ -13,8 +13,12 @@
 
   {# Config found #}
   {% else %}
-
-
+  <p>These are the current existing config, which one do you want to edit ?</p>
+  <ul>
+    {% for config in configs %}
+      <li><a href="config/{{ config }}">{{ config }}</a></li>
+    {% endfor %}
+  </ul>
   {% endif %}
 
 {% endblock %}

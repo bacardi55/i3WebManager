@@ -20,12 +20,12 @@ $app->match('/', function () use ($app) {
 
   if ($i3wm->is_new() === true) {
     return $app['twig']->render('index.html', array(
-      'config' => null
+      'configs' => null
     ));
   }
   else {
     return $app['twig']->render('index.html', array(
-      'configs' => $i3wm->getConfigs
+      'configs' => $i3wm->getConfigsNames()
     ));
   }
 });

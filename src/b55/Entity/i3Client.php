@@ -29,6 +29,10 @@ class i3Client {
     $this->arguments = $arguments;
   }
 
+  public function getCommand() {
+    return $this->getName() . $this->getArguments();
+  }
+
   public function save() {
     $return = array(
       'name' => $this->name,
