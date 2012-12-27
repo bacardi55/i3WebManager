@@ -23,6 +23,11 @@ git clone https://github.com/bacardi55/i3WebManager/
 curl -s http://getcomposer.org/installer | php
 php composer.phar install
 ```
+Then create a vhost and set the root directory to the web directory.
+Change the permissions to let the app create/modify a file in
+```
+src/b55/Resources/i3Config.yml
+```
 
 Current State
 =============
