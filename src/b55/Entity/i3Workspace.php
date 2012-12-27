@@ -42,7 +42,7 @@ class i3Workspace {
     return $return;
   }
 
-  public function addContainer(i3Container $i3container) {
+  public function addContainer(i3Container $i3Container) {
     $this->containers[] = $i3Container;
   }
 }

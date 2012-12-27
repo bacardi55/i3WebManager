@@ -19,9 +19,6 @@ class i3WebManager {
       $i3Configs = $array['i3Config'];
 
       $this->load($i3Configs);
-
-      $this->save();
-      echo '<pre>';print_r($this);die;
     }
   }
 
@@ -52,15 +49,11 @@ class i3WebManager {
     return false;
   }
 
-  public function save($filename) {
-    $this->generateYaml();
-
-    // TODO: Save file.
-    echo '<pre>';
-    print_r($configs);
-    print_r($yaml);
-    file_put_contents($filename, utf8_encode($yaml), LOCK_EX);
-    die;
+  public function save($filename, $real_save = false) {
+    $yaml = $this->generateYaml();
+    if (false === file_put_contents($filename, utf8_encode($yaml), LOCK_EX)) {
+      die('Error saving the file, make sure that a file can be created in the folder src/b55/Resources');
+    }
   }
 
   public function load($configs) {
@@ -71,22 +64,25 @@ class i3WebManager {
         for ($i = 0, $nb = count($workspaces); $i < $nb; ++$i) {
           $workspace = new i3Workspace($workspaces[$i]['name']);
 
-          if (array_key_exists('containers', $workspace)) {
-            $containers = $workspace['containers'];
-            for ($j = 0, $nbc = count($containers); $j < $nb; ++$j) {
-              $container = new i3Container($containers[$j]['name']);
+          // In the next version, this part will become way more
+          // complicated (containers in containers, …).
+          if (array_key_exists('containers', $workspaces[$i])) {
+            $containers = $workspaces[$i]['containers'];
 
-              if (array_key_exists('clients', $containers)) {
-                $clients = $containers['client'];
+            for ($j = 0, $nbc = count($containers); $j < $nbc; ++$j) {
+              $container = new i3Container($containers[$j]['name']);
+              if (array_key_exists('clients', $containers[$j])) {
+                $clients = $containers[$j]['clients'];
+
                 for ($k = 0, $nbcl = count($clients); $k < $nbcl; ++$k) {
                   $client = new i3Client($clients[$k]['name']);
                   $container->addClient($client);
                 }
+                $workspace->addContainer($container);
               }
-              $workspace->addContainer($container);
             }
+            $i3Config->addWorkspace($workspace);
           }
-          $i3Config->addWorkspace($workspace);
         }
       }
       $this->configs[] = $i3Config;
