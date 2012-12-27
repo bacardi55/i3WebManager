@@ -24,15 +24,15 @@ The 0.2 will have a full working process to let you create a simple configuratio
 Wish list
 =========
 What I want from this app (at least) :
-First :
-  Create multiple config (home, offices, …)
-  Add client per workspace
-  Add client in specific split / layout
-  A cli php script to add at the start of i3 to launch your choosen configuration
-Then :
-  Pre-configure i3WebManager by reading i3/config file
-  Drag & drop UI to create your i3 session as wanted
-  An export of the configuration in a bash script to not have php installed on the user pc.
+- First :
+  - Create multiple config (home, offices, …)
+  - Add client per workspace
+  - Add client in specific split / layout
+  - A cli php script to add at the start of i3 to launch your choosen configuration
+- Then :
+  - Pre-configure i3WebManager by reading i3/config file
+  - Drag & drop UI to create your i3 session as wanted
+  - An export of the configuration in a bash script to not have php installed on the user pc.
 
 Install
 =======
