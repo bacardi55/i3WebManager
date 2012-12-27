@@ -14,6 +14,16 @@ I could have done a bash script with i3msg to do the same but I wanted an easy w
 
 I like to release early, release often so be carreful when trying it :D.
 
+
+Install
+=======
+To install, just do :
+```bash
+git clone https://github.com/bacardi55/i3WebManager/
+curl -s http://getcomposer.org/installer | php
+php composer.phar install
+```
+
 Current State
 =============
 Tag 0.1 : 
@@ -34,11 +44,3 @@ What I want from this app (at least) :
   - Drag & drop UI to create your i3 session as wanted
   - An export of the configuration in a bash script to not have php installed on the user pc.
 
-Install
-=======
-To install, just do :
-```bash
-git clone https://github.com/bacardi55/i3WebManager/
-curl -s http://getcomposer.org/installer | php
-php composer.phar install
-```
