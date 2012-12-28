@@ -70,17 +70,73 @@ class i3WebManager {
     return false;
   }
 
+  public function setClient($config_name, $workspace_name, i3Client $i3Client, $client_to_replace = NULL) {
+    $flag = false;
+    foreach ($this->configs as $config) {
+      if ($config->getName() == $config_name) {
+        foreach ($config->getWorkspaces() as $workspace) {
+          if ($workspace->getName() == $workspace_name) {
+            $nb_containers = count($workspace->getContainers());
+            $i = 0;
+            foreach ($workspace->getContainers() as $container) {
+              ++$i;
+              if ($client_to_replace) {
+                foreach ($container->getClients() as $client) {
+                  if ($client instanceof i3Client && $client->getName() == $client_to_replace) {
+                    $flag = true;
+                    $client->setName($i3Client->getName());
+                    $client->setCommand($i3Client->getCommand());
+                    $client->setArguments($i3Client->getArguments());
+                  }
+                }
+              }
+
+              if (!$client_to_replace || ($i == $nb_containers && !$flag)) {
+                $container->addClient($i3Client);
+              }
+            }
+          }
+        }
+      }
+    }
+    $this->save();
+  }
+
+  public function setWorkspace($config_name, i3Workspace $i3Workspace, $workspace_to_replace = NULL) {
+    $flag = false;
+    foreach ($this->configs as $config) {
+      if ($config->getName() == $config_name) {
+        if ($workspace_to_replace) {
+          $nb_workspace = count($config->getWorkspaces());
+          foreach ($config->getWorkspaces() as $workspace) {
+            if ($workspace->getName() == $workspace_to_replace) {
+              $workspace->setName($i3Workspace->getName());
+              $flag = true;
+            }
+          }
+        }
+
+        if (!$workspace_to_replace || ($i == $nb_workspace && !$flag)) {
+                die ('test');
+          $config->addWorkspace($i3Workspace);
+        }
+      }
+    }
+    $this->save();
+  }
+
   public function save($real_save = false) {
     $yaml = $this->generateYaml();
-
     $filename = $this->file;
+/*
     if (!$real_save) {
-      $filename .= 'bak';
+      $filename .= '_bak';
     }
-
+*/
     if (false === file_put_contents($filename, utf8_encode($yaml), LOCK_EX)) {
       die('Error saving the file, make sure that a file can be created in the folder src/b55/Resources');
     }
+    $this->plain_config = Yaml::parse($filename);
   }
 
   public function load($config_name = NULL) {
@@ -106,7 +162,14 @@ class i3WebManager {
                 $clients = $containers[$j]['clients'];
 
                 for ($k = 0, $nbcl = count($clients); $k < $nbcl; ++$k) {
-                  $client = new i3Client($clients[$k]['name']);
+                  $cl = $clients[$k];
+                  $client = new i3Client($cl['name']);
+                  if (array_key_exists('command', $cl)) {
+                    $client->setCommand($cl['command']);
+                  }
+                  if (array_key_exists('arguments', $cl)) {
+                    $client->setArguments($cl['arguments']);
+                  }
                   $container->addClient($client);
                 }
                 $workspace->addContainer($container);

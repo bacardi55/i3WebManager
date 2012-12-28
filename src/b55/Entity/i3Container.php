@@ -1,6 +1,8 @@
 <?php
 namespace b55\Entity;
 
+use b55\Entity\i3Client as i3Client;
+
 class i3Container {
   protected $clients;
   protected $containers;

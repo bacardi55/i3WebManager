@@ -14,9 +14,11 @@ class i55Msg implements i3MsgInterface {
   }
 
   public function open_client(i3Client $i3Client) {
-    exec($i3Client->getCommand());
-    // Make that configurable.
-    sleep(3);
+    if ($cmd = $i3Client->getFullCommand()) {
+      exec($cmd);
+      // Make that configurable.
+      sleep(3);
+    }
   }
 
   protected function generate_goto_command(i3Workspace $i3Workspace) {

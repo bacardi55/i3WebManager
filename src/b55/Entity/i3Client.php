@@ -41,18 +41,19 @@ class i3Client {
     return $this->command;
   }
 
+  public function getFullCommand() {
+    return $this->command . ' ' . $this->arguments;
+  }
+
   public function save() {
     $return = array(
       'name' => $this->name,
       'command' => $this->command,
-      'argument' => $this->arguments,
+      'arguments' => $this->arguments,
       'type' => 'i3Client',
     );
 
     return $return;
   }
 
-  public function __toString() {
-    return $this->command . ' ' . $this->arguments;
-  }
 }

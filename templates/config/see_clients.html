@@ -3,6 +3,15 @@
 {% block content %}
   <h1>Configuration : « {{ config_name|e}} » - workspace : « {{ workspace_name|e}} » - client : « {{ client.name|e}} »</h1>
 
-  <p>{{ client|e }}</p>
+  <p>{{ client.name|e }}</p>
+  <p>
+    <form action="#" method="post">
+      {{ form_widget(form) }}
+      <input type="submit" name="submit" />
+    </form>
+  </p>
 
+  <p>
+    <a href="/config/{{ config_name }}/{{ workspace_name }}">Return to clients list</a>
+  </p>
 {% endblock %}

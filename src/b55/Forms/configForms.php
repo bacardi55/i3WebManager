@@ -16,4 +16,22 @@ class configForms {
 
     return $form;
   }
+
+  public function getClientForm($data = array()) {
+    $form = $this->form_factory->createBuilder('form', $data)
+      ->add('name', 'text')
+      ->add('command', 'text')
+      ->add('arguments', 'text')
+      ->getForm();
+
+    return $form;
+  }
+
+  public function getWorkspaceForm($data = array()) {
+    $form = $this->form_factory->createBuilder('form', $data)
+      ->add('name', 'text')
+      ->getForm();
+
+    return $form;
+  }
 }
