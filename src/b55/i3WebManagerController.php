@@ -114,6 +114,19 @@ $app->match('/config/{config_name}/{workspace_name}',
 
 });
 
+/* Remove workspace */
+$app->match('/config/{config_name}/{workspace_name}/remove',
+  function ($config_name, $workspace_name) use ($app) {
+
+  if (!is_string($config_name) || !is_string($workspace_name)) {
+    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+  }
+  $i3wm = $app['i3wm'];
+  $i3wm->removeWorkspace($config_name, $workspace_name);
+
+  return $app->redirect('/config/' . $config_name);
+});
+
 /* Edit a client */
 $app->match('/config/{config_name}/{workspace_name}/{client_name}',
   function (Request $request, $config_name, $workspace_name, $client_name) use ($app) {
@@ -170,7 +183,6 @@ $app->match('/config/{config_name}/{workspace_name}/{client_name}',
 
   $data = array();
 });
-
 /* Remove client */
 $app->match('/config/{config_name}/{workspace_name}/{client_name}/remove',
   function ($config_name, $workspace_name, $client_name) use ($app) {
@@ -188,16 +200,4 @@ $app->match('/config/{config_name}/{workspace_name}/{client_name}/remove',
   return $app->redirect('/config/' . $config_name . '/' . $workspace_name);
 });
 
-/* Remove workspace */
-$app->match('/config/{config_name}/{workspace_name}/remove',
-  function ($config_name, $workspace_name) use ($app) {
 
-  if (!is_string($config_name) || !is_string($workspace_name)) {
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
-  }
-  $i3wm = $app['i3wm'];
-  $i3wm->load();
-  $i3wm->removeWorkspace($config_name, $workspace_name);
-
-  return $app->redirect('/config/' . $config_name);
-});

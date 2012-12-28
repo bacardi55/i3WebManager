@@ -133,7 +133,6 @@ class i3WebManager {
         }
 
         if (($workspace_to_replace === NULL)|| ($i == $nb_workspace && !$flag)) {
-          die('lol');
           $config->addWorkspace($i3Workspace);
         }
       }
