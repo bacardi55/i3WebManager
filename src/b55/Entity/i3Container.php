@@ -14,8 +14,16 @@ class i3Container {
     $this->containers = array();
   }
 
-  public function getClients() {
-    return $this->clients;
+  public function getClients($client_name = NULL) {
+    $ret = $this->clients;
+    if ($client_name && is_string($client_name)) {
+      foreach ($this->clients as $client) {
+        if ($client->getName() == $client_name) {
+          $ret = $client;
+        }
+      }
+    }
+    return $ret;
   }
 
   public function setClients($clients) {

@@ -69,11 +69,41 @@ $app->match('config/{config_name}', function ($config_name) use ($app) {
   ));
 });
 
-$app->match('config/{config_name}/{workspace_name}', function () use ($app) {
+$app->match('config/{config_name}/{workspace_name}',
+  function ($config_name, $workspace_name) use ($app) {
+
   $i3wm = $app['i3wm'];
-  if (!is_string($config_name)) {
+  if (!is_string($config_name) || !is_string($workspace_name)) {
     return new Response($app['twig']->render($page, array('code' => '404')), $code);
   }
 
-  $conf = $i3wm->getConfig($config_name);
+  $i3Config = $i3wm->getConfigs($config_name);
+  $i3Workspace = $i3Config->getWorkspaces($workspace_name);
+
+  return $app['twig']->render('config/see_workspace.html', array(
+    'config_name' => $config_name,
+    'workspace' => $i3Workspace,
+  ));
+
+});
+$app->match('config/{config_name}/{workspace_name}/{client_name}',
+  function ($config_name, $workspace_name, $client_name) use ($app) {
+
+  $i3wm = $app['i3wm'];
+  if (!is_string($config_name) || !is_string($workspace_name)
+    || !is_string($client_name)) {
+
+    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+  }
+
+  $i3Config = $i3wm->getConfigs($config_name);
+  $i3Workspace = $i3Config->getWorkspaces($workspace_name);
+  $i3Client = $i3Workspace->getClient($client_name);
+
+  return $app['twig']->render('config/see_clients.html', array(
+    'config_name' => $config_name,
+    'workspace_name' => $workspace_name,
+    'client' => $i3Client,
+  ));
+
 });

@@ -3,13 +3,17 @@ namespace b55\Entity;
 
 class i3Client {
   protected $name;
+  protected $command;
   protected $arguments;
 
-  public function __construct($name, $arguments = NULL) {
+  public function __construct($name, $command = NULL, $arguments = NULL) {
     $this->setName($name);
 
-    if ($arguments) {
-      $this->setArguments($arguments);
+    if ($command && is_string($command)) {
+      $this->command = $command;
+      if ($arguments) {
+        $this->setArguments($arguments);
+      }
     }
   }
 
@@ -29,17 +33,26 @@ class i3Client {
     $this->arguments = $arguments;
   }
 
+  public function setCommand($command) {
+    $this->command = $command;
+  }
+
   public function getCommand() {
-    return $this->getName() . $this->getArguments();
+    return $this->command;
   }
 
   public function save() {
     $return = array(
       'name' => $this->name,
+      'command' => $this->command,
       'argument' => $this->arguments,
       'type' => 'i3Client',
     );
 
     return $return;
+  }
+
+  public function __toString() {
+    return $this->command . ' ' . $this->arguments;
   }
 }

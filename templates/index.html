@@ -16,7 +16,7 @@
   <p>These are the current existing config, which one do you want to edit ?</p>
   <ul>
     {% for config in configs %}
-      <li><a href="config/{{ config }}">{{ config }}</a></li>
+      <li><a href="config/{{ config }}">{{ config|e }}</a></li>
     {% endfor %}
   </ul>
   {% endif %}

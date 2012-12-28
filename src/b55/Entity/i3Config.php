@@ -30,7 +30,17 @@ class i3Config {
     $this->name = $name;
   }
 
-  public function getWorkspaces() {
+  public function getWorkspaces($name = NULL) {
+    $ret = $this->workspaces;
+
+    if ($name != NULL) {
+      foreach ($this->workspaces as $workspace) {
+        if ($workspace->getName() == $name) {
+          return $workspace;
+        }
+      }
+    }
+
     return $this->workspaces;
   }
 

@@ -1,6 +1,8 @@
 <?php
 namespace b55\Entity;
 
+use b55\Entity\i3Client as i3Client;
+
 class i3Workspace {
   protected $containers;
   protected $name;
@@ -63,5 +65,16 @@ class i3Workspace {
 
   public function addContainer(i3Container $i3Container) {
     $this->containers[] = $i3Container;
+  }
+
+  public function getClient($client_name) {
+    foreach ($this->containers as $container) {
+      $i3Client = $container->getClients($client_name);
+
+      if ($i3Client instanceof i3Client) {
+        return $i3Client;
+      }
+    }
+    return false;
   }
 }
