@@ -97,12 +97,23 @@ $app->match('/config/{config_name}/{workspace_name}',
   }
 
   $i3Config = $i3wm->getConfigs($config_name);
-  $i3Workspace = $i3Config->getWorkspaces($workspace_name);
 
   $data = array();
-  if ($i3Workspace instanceof i3Workspace) {
-    $data['name'] = $i3Workspace->getName();
+  if ($workspace_name == 'new') {
+    $i3Workspace = new i3Workspace('new');
+    $data['is_new'] = 1;
   }
+  else {
+    $i3Workspace = $i3Config->getWorkspaces($workspace_name);
+
+    if ($i3Workspace instanceof i3Workspace) {
+      $data = array(
+        'name' => $i3Workspace->getName(),
+        'is_new' => 0,
+      );
+    }
+  }
+
   $i3Form = $app['i3wm_forms']['configForm'];
   $form = $i3Form->getWorkspaceForm($data);
 
@@ -110,11 +121,14 @@ $app->match('/config/{config_name}/{workspace_name}',
     $form->bind($request);
     if ($form->isValid()) {
       $data = $form->getData();
-      $i3Workspace->setName($data['name']);
-      $i3wm->save();
-
-      $message[] = 'This workspace has been saved';
-
+      if ($data['is_new'] == 1) {
+        $i3Config->addWorkspace(new i3Workspace($data['name']));
+        $i3wm->save();
+      }
+      else {
+        $i3Workspace->setName($data['name']);
+        $i3wm->save();
+      }
       return $app->redirect('/config/' . $config_name);
     }
   }
@@ -142,26 +156,34 @@ $app->match('/config/{config_name}/{workspace_name}/remove',
 
 /* Edit a client */
 $app->match('/config/{config_name}/{workspace_name}/{client_name}',
-  function (Request $request, $config_name, $workspace_name, $client_name) use ($app) {
+  function (Request $request, $config_name, $workspace_name, $client_name = NULL) use ($app) {
 
   $i3wm = $app['i3wm'];
   if (!is_string($config_name) || !is_string($workspace_name)
-    || !is_string($client_name)) {
+    || ($client_name && !is_string($client_name))) {
 
     return new Response($app['twig']->render($page, array('code' => '404')), $code);
   }
 
   $i3Config = $i3wm->getConfigs($config_name);
   $i3Workspace = $i3Config->getWorkspaces($workspace_name);
-  $i3Client = $i3Workspace->getClient($client_name);
 
   $data = array();
-  if ($i3Client instanceof i3Client) {
-    $data = array(
-      'name' => $i3Client->getName(),
-      'command' => $i3Client->getCommand(),
-      'arguments' => $i3Client->getArguments(),
-    );
+  if ($client_name == 'new') {
+    $i3Client = new i3Client('new');
+    $data['is_new'] = 1;
+  }
+  else {
+    $i3Client = $i3Workspace->getClient($client_name);
+
+    if ($i3Client instanceof i3Client) {
+      $data = array(
+        'name' => $i3Client->getName(),
+        'command' => $i3Client->getCommand(),
+        'arguments' => $i3Client->getArguments(),
+        'is_new' => 0,
+      );
+    }
   }
 
   $i3Form = $app['i3wm_forms']['configForm'];
@@ -175,12 +197,13 @@ $app->match('/config/{config_name}/{workspace_name}/{client_name}',
       $i3Client->setCommand($data['command']);
       $i3Client->setArguments($data['arguments']);
 
-      $i3wm->setClient($config_name, $workspace_name, $i3Client, $client_name);
+      if ($data['is_new'] == 1) {
+        $i3wm->addClient($config_name, $workspace_name, $i3Client);
+      }
+      else {
+        $i3wm->save();
+      }
 
-      $default_file = getYamlFilePathFromApp($app);
-      $i3wm->save($default_file);
-
-      $message[] = 'This client has been saved';
 
       return $app->redirect('/config/' . $config_name . '/' .  $workspace_name);
     }
@@ -192,9 +215,6 @@ $app->match('/config/{config_name}/{workspace_name}/{client_name}',
     'client' => $i3Client,
     'form' => $form->createView(),
   ));
-
-
-  $data = array();
 });
 /* Remove client */
 $app->match('/config/{config_name}/{workspace_name}/{client_name}/remove',

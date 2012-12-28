@@ -35,7 +35,7 @@ class i3Config {
 
     if ($name != NULL) {
       foreach ($this->workspaces as $workspace) {
-        if ($workspace->getName() == $name) {
+        if (strcmp($workspace->getName(), $name) === 0) {
           return $workspace;
         }
       }
@@ -68,7 +68,7 @@ class i3Config {
 
   public function removeClient($workspace_name, $client_name) {
     foreach ($this->workspaces as $workspace) {
-      if ($workspace_name == $workspace->getName()) {
+      if (strcmp($workspace_name, $workspace->getName()) === 0) {
         $workspace->removeClient($client_name);
       }
     }
@@ -76,8 +76,17 @@ class i3Config {
 
   public function removeWorkspace($workspace_name) {
     foreach ($this->workspaces as $key => $workspace) {
-      if ($workspace_name == $workspace->getName()) {
+      if (strcmp($workspace_name, $workspace->getName()) === 0) {
         unset($this->workspaces[$key]);
+      }
+    }
+    $this->workspaces = array_merge($this->workspaces);
+  }
+
+  public function addClient($workspace_name, i3Client $i3Client, $container_name = NULL) {
+    foreach ($this->workspaces as $workspace) {
+      if (strcmp($workspace->getName(), $workspace_name) === 0) {
+        $workspace->addClient($i3Client, $container_name);
       }
     }
   }

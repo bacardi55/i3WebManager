@@ -1,4 +1,5 @@
 <?php
+$app['debug'] = true; //TODO REMOVE
 
 // configure your app for the production environment
 $app['i3WebManager'] = array(

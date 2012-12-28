@@ -20,7 +20,7 @@ class i3Container {
     $ret = $this->clients;
     if ($client_name && is_string($client_name)) {
       foreach ($this->clients as $client) {
-        if ($client->getName() == $client_name) {
+        if (strcmp($client->getName(), $client_name) === 0) {
           $ret = $client;
         }
       }
@@ -79,9 +79,10 @@ class i3Container {
 
   public function removeClient($client_name) {
     foreach ($this->clients as $key => $client) {
-      if ($client->getName() == $client_name) {
+      if (strcmp($client->getName(), $client_name) === 0) {
         unset($this->clients[$key]);
       }
     }
+    $this->clients = array_merge($this->clients);
   }
 }

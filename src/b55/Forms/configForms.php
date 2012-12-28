@@ -19,6 +19,7 @@ class configForms {
 
   public function getClientForm($data = array()) {
     $form = $this->form_factory->createBuilder('form', $data)
+      ->add('is_new', 'hidden')
       ->add('name', 'text')
       ->add('command', 'text')
       ->add('arguments', 'text')
@@ -30,6 +31,7 @@ class configForms {
   public function getWorkspaceForm($data = array()) {
     $form = $this->form_factory->createBuilder('form', $data)
       ->add('name', 'text')
+      ->add('is_new', 'hidden')
       ->getForm();
 
     return $form;

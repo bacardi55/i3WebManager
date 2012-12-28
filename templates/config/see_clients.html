@@ -3,7 +3,10 @@
 {% block content %}
   <h1>Configuration : « {{ config_name|e}} » - workspace : « {{ workspace_name|e}} » - client : « {{ client.name|e}} »</h1>
 
-  <p>{{ client.name|e }}</p>
+  {% if client is not defined %}
+  {% else %}
+    <p>{{ client.name|e }}</p>
+  {% endif %}
   <p>
     <form action="#" method="post">
       {{ form_widget(form) }}

@@ -37,7 +37,7 @@ class i3WebManager {
 
     if ($config_name) {
       for ($i = 0, $nb = count($this->configs); $i < $nb; ++$i) {
-        if ($this->configs[$i]->getName() == $config_name) {
+        if (strcmp($this->configs[$i]->getName(), $config_name) === 0) {
           $ret = $this->configs[$i];
         }
       }
@@ -76,36 +76,14 @@ class i3WebManager {
     return false;
   }
 
-  public function setClient($config_name, $workspace_name, i3Client $i3Client, $client_to_replace = NULL) {
+  public function addClient($config_name, $workspace_name, i3Client $i3Client, $container_name = NULL) {
     $flag = false;
     foreach ($this->configs as $config) {
-      if ($config->getName() == $config_name) {
-        foreach ($config->getWorkspaces() as $workspace) {
-          if ($workspace->getName() == $workspace_name) {
-            $nb_containers = count($workspace->getContainers());
-            $i = 0;
-            foreach ($workspace->getContainers() as $container) {
-              ++$i;
-              if ($client_to_replace) {
-                foreach ($container->getClients() as $client) {
-                  if ($client instanceof i3Client && $client->getName() == $client_to_replace) {
-                    $flag = true;
-                    $client->setName($i3Client->getName());
-                    $client->setCommand($i3Client->getCommand());
-                    $client->setArguments($i3Client->getArguments());
-                  }
-                }
-              }
-
-              if (!$client_to_replace || ($i == $nb_containers && !$flag)) {
-                $container->addClient($i3Client);
-              }
-            }
-          }
-        }
+      if (strcmp($config->getName(), $config_name) === 0) {
+        $config->addClient($workspace_name, $i3Client, $container_name);
+        $this->save();
       }
     }
-    $this->save();
   }
 
   public function removeClient($config_name, $workspace_name, $client_name) {
@@ -118,14 +96,13 @@ class i3WebManager {
   public function setWorkspace($config_name, i3Workspace $i3Workspace, $workspace_to_replace = NULL) {
     $flag = false;
     foreach ($this->configs as $config) {
-      if ($config->getName() == $config_name) {
+      if (strcmp($config->getName(), $config_name) === 0) {
         if ($workspace_to_replace !== NULL) {
           $nb_workspace = count($config->getWorkspaces());
           $i = 0;
           foreach ($config->getWorkspaces() as $workspace) {
             ++$i;
-            echo $workspace->getName(). ' - ' . $workspace_to_replace . '<br/>';
-            if ($workspace->getName() == $workspace_to_replace) {
+            if (strcmp($workspace->getName(), $workspace_to_replace) === 0) {
               $workspace->setName($i3Workspace->getName());
               $flag = true;
             }
@@ -150,7 +127,7 @@ class i3WebManager {
 
   public function removeConfig($config_name) {
     foreach ($this->configs as $key => $config) {
-      if ($config->getName() == $config_name) {
+      if (strcmp($config->getName(), $config_name) === 0) {
         unset($this->configs[$key]);
       }
     }

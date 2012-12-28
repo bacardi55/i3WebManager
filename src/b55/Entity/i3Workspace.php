@@ -82,4 +82,29 @@ class i3Workspace {
       $container->removeClient($client_name);
     }
   }
+
+  public function addClient(i3Client $i3Client, $container_name = NULL) {
+    $nb_containers = count($this->getContainers());
+    // This workspace is a virgin, don't need to do more.
+    if (!$nb_containers) {
+      $i3Container = new i3Container();
+      $i3Container->addClient($i3Client);
+      $this->addContainer($i3Container);
+      return;
+    }
+    else {
+      if (!$container_name) {
+        $container = current($this->containers);
+        // TODO: Check container as child later.
+        $container->addClient($i3Client);
+        return;
+      }
+      foreach ($workspace->getContainers() as $container) {
+        if (strcmp($container->getName(), $container_name) === 0) {
+          $container->addClient($i3Client);
+          return;
+        }
+      }
+    }
+  }
 }
