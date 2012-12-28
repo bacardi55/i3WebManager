@@ -65,4 +65,20 @@ class i3Config {
   public function addWorkspace(i3Workspace $i3Workspace) {
     $this->workspaces[] = $i3Workspace;
   }
+
+  public function removeClient($workspace_name, $client_name) {
+    foreach ($this->workspaces as $workspace) {
+      if ($workspace_name == $workspace->getName()) {
+        $workspace->removeClient($client_name);
+      }
+    }
+  }
+
+  public function removeWorkspace($workspace_name) {
+    foreach ($this->workspaces as $key => $workspace) {
+      if ($workspace_name == $workspace->getName()) {
+        unset($this->workspaces[$key]);
+      }
+    }
+  }
 }

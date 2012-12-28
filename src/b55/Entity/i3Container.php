@@ -76,4 +76,12 @@ class i3Container {
   public function addClient(i3Client $i3Client) {
     $this->clients[] = $i3Client;
   }
+
+  public function removeClient($client_name) {
+    foreach ($this->clients as $key => $client) {
+      if ($client->getName() == $client_name) {
+        unset($this->clients[$key]);
+      }
+    }
+  }
 }

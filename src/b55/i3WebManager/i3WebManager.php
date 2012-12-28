@@ -15,12 +15,17 @@ class i3WebManager {
   protected $plain_config;
   protected $is_loaded = false;
 
-  public function __construct($file) {
+  public function __construct($file, $load = true) {
     $this->file = $file;
     $this->configs = array();
 
     if (file_exists($file)) {
       $this->plain_config = Yaml::parse($file);
+      //echo '<pre>'; print_r($this->plain_config); die;
+    }
+
+    if ($load == true) {
+      $this->load();
     }
   }
 
@@ -50,6 +55,7 @@ class i3WebManager {
 
   public function addConfig($config_name, $nb_workspaces = 0) {
     $this->configs[] = new i3Config($config_name, $nb_workspaces);
+    $this->save();
   }
 
   /**
@@ -102,13 +108,23 @@ class i3WebManager {
     $this->save();
   }
 
+  public function removeClient($config_name, $workspace_name, $client_name) {
+    if ($config = $this->getConfigs($config_name)) {
+      $config->removeClient($workspace_name, $client_name);
+      $this->save();
+    }
+  }
+
   public function setWorkspace($config_name, i3Workspace $i3Workspace, $workspace_to_replace = NULL) {
     $flag = false;
     foreach ($this->configs as $config) {
       if ($config->getName() == $config_name) {
-        if ($workspace_to_replace) {
+        if ($workspace_to_replace !== NULL) {
           $nb_workspace = count($config->getWorkspaces());
+          $i = 0;
           foreach ($config->getWorkspaces() as $workspace) {
+            ++$i;
+            echo $workspace->getName(). ' - ' . $workspace_to_replace . '<br/>';
             if ($workspace->getName() == $workspace_to_replace) {
               $workspace->setName($i3Workspace->getName());
               $flag = true;
@@ -116,8 +132,8 @@ class i3WebManager {
           }
         }
 
-        if (!$workspace_to_replace || ($i == $nb_workspace && !$flag)) {
-                die ('test');
+        if (($workspace_to_replace === NULL)|| ($i == $nb_workspace && !$flag)) {
+          die('lol');
           $config->addWorkspace($i3Workspace);
         }
       }
@@ -125,14 +141,17 @@ class i3WebManager {
     $this->save();
   }
 
+  public function removeWorkspace($config_name, $workspace_name) {
+    if ($config = $this->getConfigs($config_name)) {
+      $config->removeWorkspace($workspace_name);
+      $this->save();
+    }
+  }
+
   public function save($real_save = false) {
     $yaml = $this->generateYaml();
     $filename = $this->file;
-/*
-    if (!$real_save) {
-      $filename .= '_bak';
-    }
-*/
+
     if (false === file_put_contents($filename, utf8_encode($yaml), LOCK_EX)) {
       die('Error saving the file, make sure that a file can be created in the folder src/b55/Resources');
     }

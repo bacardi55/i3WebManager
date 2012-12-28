@@ -10,7 +10,6 @@ class i3Workspace {
   public function __construct($name) {
     $this->setName($name);
     $this->containers = array();
-    //$this->containers = array(new i3Container());
   }
 
   public function getContainers() {
@@ -76,5 +75,11 @@ class i3Workspace {
       }
     }
     return false;
+  }
+
+  public function removeClient($client_name) {
+    foreach ($this->getContainers() as $container) {
+      $container->removeClient($client_name);
+    }
   }
 }

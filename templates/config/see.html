@@ -8,10 +8,13 @@
     <li>
       <a href="/config/{{ config.name }}/{{ workspace.name }}">Modify workspace « {{ workspace.name|e }} »</a>
       ({{ workspace.getNumberOfClients }} client(s): {{ workspace.getClientsNames }})
-
+      -
+      <a href="/config/{{ config.name }}/{{workspace.name}}/remove">X Remove</a>
     </li>
     {% else %}
       <li>No workspace for this configuration</li>
     {% endfor %}
   </ul>
+
+  <p><a href="/">Return on the previous page</a></p>
 {% endblock %}
