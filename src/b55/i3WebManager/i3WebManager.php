@@ -144,7 +144,18 @@ class i3WebManager {
     if ($config = $this->getConfigs($config_name)) {
       $config->removeWorkspace($workspace_name);
       $this->save();
+      return;
     }
+  }
+
+  public function removeConfig($config_name) {
+    foreach ($this->configs as $key => $config) {
+      if ($config->getName() == $config_name) {
+        unset($this->configs[$key]);
+      }
+    }
+    $this->configs = array_merge($this->configs);
+    $this->save();
   }
 
   public function save($real_save = false) {

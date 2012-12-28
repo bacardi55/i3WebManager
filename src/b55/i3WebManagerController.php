@@ -74,6 +74,19 @@ $app->match('/config/{config_name}', function ($config_name) use ($app) {
   ));
 });
 
+/* Remove config */
+$app->match('/config/{config_name}/remove', function ($config_name) use ($app) {
+  if (!is_string($config_name)) {
+    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+  }
+
+  $i3wm = $app['i3wm'];
+  $i3wm->removeConfig($config_name);
+
+  return $app->redirect('/');
+});
+
+
 /* List of clients */
 $app->match('/config/{config_name}/{workspace_name}',
   function (Request $request, $config_name, $workspace_name) use ($app) {
