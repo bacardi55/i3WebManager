@@ -29,12 +29,26 @@ Change the permissions to let the app create/modify a file in
 src/b55/Resources/i3Config.yml
 ```
 
+After creating your config file, you need to launch to i3CliManager. This console will launch your app in your workspace.
+To launch i3CliManager, 
+```
+php console i3CliManager:start [config_name]
+```
+with [config_name] the name of the config you want to launch.
+
 Current State
 =============
-Tag 0.1 : 
-The app is currently useless. The load/saving part work though and that's the most important part.
+**Tag 0.2-alpha**:
+You can now install the app, run it and create a new configuration from scratch.
+For now, you can only add client to workspace. You can't do split or layout for now, but you'll be able to one day…
+Plus, the console is also ready. So you can create your config in your web browser, and then run this command line :
+```
+php console i3CliManager:start test
+```
+You can't start it in a tty though, your i3session must be started.
 
-The 0.2 will have a full working process to let you create a simple configuration to load client in workspace (no layout, split, container yet).
+**Tag 0.1** : 
+The app is currently useless. The load/saving part work though and that's the most important part.
 
 Wish list
 =========
