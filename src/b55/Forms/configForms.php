@@ -22,7 +22,7 @@ class configForms {
       ->add('is_new', 'hidden')
       ->add('name', 'text')
       ->add('command', 'text')
-      ->add('arguments', 'text')
+      ->add('arguments', 'text', array('required' => false))
       ->getForm();
 
     return $form;
