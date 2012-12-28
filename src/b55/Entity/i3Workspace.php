@@ -27,6 +27,25 @@ class i3Workspace {
     $this->name = $name;
   }
 
+  public function getNumberOfClients() {
+    $nb = 0;
+    foreach ($this->containers as $container) {
+      $nb += count($container->getClients());
+    }
+
+    return $nb;
+  }
+
+  public function getClientsNames() {
+    $ret = '';
+    foreach ($this->containers as $container) {
+      foreach ($container->getClients() as $client) {
+        $ret .= $client->getName() . ', ';
+      }
+    }
+    return substr($ret, 0, -2);
+  }
+
   public function save() {
     $containers = array();
     for ($i = 0, $nb = count($this->containers); $i < $nb; ++$i) {

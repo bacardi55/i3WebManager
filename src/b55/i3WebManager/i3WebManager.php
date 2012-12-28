@@ -25,6 +25,9 @@ class i3WebManager {
   }
 
   public function getConfigs($config_name = NULL) {
+    if (!$this->is_loaded) {
+      $this->load();
+    }
     $ret = $this->configs;
 
     if ($config_name) {

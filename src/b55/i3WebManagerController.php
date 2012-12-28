@@ -56,7 +56,24 @@ $app->match('/config/new', function (Request $request) use ($app) {
   ));
 });
 
-$app->match('config/{config_name}/workspaces/edit', function () use ($app) {
+$app->match('config/{config_name}', function ($config_name) use ($app) {
   $i3wm = $app['i3wm'];
-  $i3wm->getConfig($config_name);
+  if (!is_string($config_name)) {
+    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+  }
+
+  $conf = $i3wm->getConfigs($config_name);
+
+  return $app['twig']->render('config/see.html', array(
+    'config' => $conf,
+  ));
+});
+
+$app->match('config/{config_name}/{workspace_name}', function () use ($app) {
+  $i3wm = $app['i3wm'];
+  if (!is_string($config_name)) {
+    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+  }
+
+  $conf = $i3wm->getConfig($config_name);
 });
