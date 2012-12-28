@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Configuration : « {{ config_name|e}} » - workspace : « {{ workspace.name|e}} »</h1>
+
+  <ul>
+    {% for container in workspace.containers %}
+      {% for client in container.clients %}
+        <li>
+          <a href="{{ workspace.name }}/{{ client.name }}">Modify client « {{ client.name|e }} »</a>
+        </li>
+      {% endfor %}
+    {% else %}
+      <li>No Client for this configuration</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
