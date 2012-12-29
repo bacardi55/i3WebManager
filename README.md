@@ -72,11 +72,15 @@ The app is currently useless. The load/saving part work though and that's the mo
 
 FAQ
 ===
-**Why PHP** : 
+**Why PHP**: 
 I know that most of the i3 users wouldn't have made it in PHP but here are some of my reasons :
   - I'm a PHP developer;
   - I wanted to create my first app with the Silex micro framework;
   - The first version needed to be done in less than 3 days (to use it at my 1st 2013 job day ^^)
+
+**Why YAML**:
+I choose to save the config file in YAML because I didn't want a database for this, even sqlite. It was either
+yaml or json. I like yaml more as it's more readable. In any case, if you want to use the config file from your own app, it should be easy enough.
 
 Wish list
 =========
