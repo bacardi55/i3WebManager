@@ -5,6 +5,7 @@ Priority 1:
   V. Create yaml config by the web interface
     V. First version will handle client in workspace only
   Console App that will launch the config to start creating client in workspace
+  Add client in Scratchpad
 
 
 Priority 2:
