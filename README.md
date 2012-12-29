@@ -88,10 +88,11 @@ What I want from this app (at least) :
 - First :
   - Create multiple config (home, offices, …) (done)
   - Add client per workspace (done)
+  - Add Scratchpad
   - Add client in specific split / layout
   - A cli php script to add at the start of i3 to launch your choosen configuration (done)
 - Then :
   - Pre-configure i3WebManager by reading i3/config file
   - Drag & drop UI to create your i3 session as wanted
   - An export of the configuration in a bash script to not have php installed on the user pc.
-
+  - Creating a configuration by reading your current i3Session
