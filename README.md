@@ -72,11 +72,15 @@ The app is currently useless. The load/saving part work though and that's the mo
 
 FAQ
 ===
-**Why PHP** : 
+**Why PHP**: 
 I know that most of the i3 users wouldn't have made it in PHP but here are some of my reasons :
   - I'm a PHP developer;
   - I wanted to create my first app with the Silex micro framework;
   - The first version needed to be done in less than 3 days (to use it at my 1st 2013 job day ^^)
+
+**Why YAML**:
+I choose to save the config file in YAML because I didn't want a database for this, even sqlite. It was either
+yaml or json. I like yaml more as it's more readable. In any case, if you want to use the config file from your own app, it should be easy enough.
 
 Wish list
 =========
@@ -84,10 +88,11 @@ What I want from this app (at least) :
 - First :
   - Create multiple config (home, offices, …) (done)
   - Add client per workspace (done)
+  - Add Scratchpad
   - Add client in specific split / layout
   - A cli php script to add at the start of i3 to launch your choosen configuration (done)
 - Then :
   - Pre-configure i3WebManager by reading i3/config file
   - Drag & drop UI to create your i3 session as wanted
   - An export of the configuration in a bash script to not have php installed on the user pc.
-
+  - Creating a configuration by reading your current i3Session
