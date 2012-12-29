@@ -15,7 +15,8 @@ class i55Msg implements i3MsgInterface {
 
   public function open_client(i3Client $i3Client) {
     if ($cmd = $i3Client->getFullCommand()) {
-      exec($cmd);
+      $cmd = escapeshellcmd($cmd);
+      exec('nohup ' . $cmd . ' > /dev/null 2>&1 &');
       // Make that configurable.
       sleep(3);
     }
