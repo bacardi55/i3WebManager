@@ -2,13 +2,13 @@ TODO list:
 ==========
 
 Priority 1:
-  Create yaml config by the web interface
-    - First version will handle client in workspace only
+  V. Create yaml config by the web interface
+    V. First version will handle client in workspace only
   Console App that will launch the config to start creating client in workspace
 
 
 Priority 2:
-  Create a minimal console that let the user create workspace/client with CLI interface
+  V. Create a minimal console that let the user create workspace/client with CLI interface
     (The CLI interface will never have as much features as the web interface due to my bash scripting level)
   Improve web interface
     - Second version will handle container and layout
