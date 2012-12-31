@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Configuration : « {{ config_name|e}} »</h1>
+
+  <p>
+    <form action="#" method="post">
+      {{ form_widget(form) }}
+      <input type="submit" name="submit" />
+    </form>
+  </p>
+
+  <p>
+    <a href="/config/{{ config_name }}">Return to config page</a>
+  </p>
+{% endblock %}
