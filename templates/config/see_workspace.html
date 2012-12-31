@@ -13,10 +13,10 @@
     {% for container in workspace.containers %}
       {% for client in container.clients %}
         <li>
-          <a href="/config/{{ config_name }}/{{ workspace.name }}/{{ client.name }}">
+          <a href="/config/{{ config_name }}/workspace/{{ workspace.name }}/{{ client.name }}">
             Modify client « {{ client.name|e }} »
           </a>
-          - <a href="/config/{{ config_name }}/{{ workspace.name }}/{{ client.name }}/remove">Delete X</a>
+          - <a href="/config/{{ config_name }}/workspace/{{ workspace.name }}/{{ client.name }}/remove">Delete X</a>
         </li>
       {% endfor %}
     {% else %}
@@ -25,7 +25,7 @@
   </ul>
 
   <p>
-    <a href="/config/{{ config_name }}/{{ workspace.name }}/new">Add a client</a>
+    <a href="/config/{{ config_name }}/workspace/{{ workspace.name }}/new">Add a client</a>
     <br/>
     <a href="/config/{{ config_name }}">Return to workspace list</a>
   </p>

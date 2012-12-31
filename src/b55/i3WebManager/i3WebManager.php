@@ -29,6 +29,7 @@ class i3WebManager {
     }
   }
 
+  /* Configs */
   public function getConfigs($config_name = NULL) {
     if (!$this->is_loaded) {
       $this->load();
@@ -58,24 +59,17 @@ class i3WebManager {
     $this->save();
   }
 
-  /**
-   * Return if the config exists or not
-   *
-   * @return Boolean
-   *   False if the config existed
-   *   True if the config doen't exists
-   */
-  public function is_new() {
-    if (!$this->is_loaded) {
-      $this->load();
+  public function removeConfig($config_name) {
+    foreach ($this->configs as $key => $config) {
+      if (strcmp($config->getName(), $config_name) === 0) {
+        unset($this->configs[$key]);
+      }
     }
-
-    if (!count($this->configs)) {
-      return true;
-    }
-    return false;
+    $this->configs = array_merge($this->configs);
+    $this->save();
   }
 
+  /* Clients */
   public function addClient($config_name, $workspace_name, i3Client $i3Client, $container_name = NULL) {
     $flag = false;
     foreach ($this->configs as $config) {
@@ -93,6 +87,7 @@ class i3WebManager {
     }
   }
 
+  /* Workspaces */
   public function setWorkspace($config_name, i3Workspace $i3Workspace, $workspace_to_replace = NULL) {
     $flag = false;
     foreach ($this->configs as $config) {
@@ -125,16 +120,27 @@ class i3WebManager {
     }
   }
 
-  public function removeConfig($config_name) {
-    foreach ($this->configs as $key => $config) {
-      if (strcmp($config->getName(), $config_name) === 0) {
-        unset($this->configs[$key]);
-      }
+  /**
+   * Return if the config exists or not
+   *
+   * @return Boolean
+   *   False if the config existed
+   *   True if the config doen't exists
+   */
+  public function is_new() {
+    if (!$this->is_loaded) {
+      $this->load();
     }
-    $this->configs = array_merge($this->configs);
-    $this->save();
+
+    if (!count($this->configs)) {
+      return true;
+    }
+    return false;
   }
 
+  /**
+   * Save method
+   */
   public function save($real_save = false) {
     $yaml = $this->generateYaml();
     $filename = $this->file;
@@ -145,6 +151,9 @@ class i3WebManager {
     $this->plain_config = Yaml::parse($filename);
   }
 
+  /**
+   * Load method
+   */
   public function load($config_name = NULL) {
     $configs = $this->plain_config['i3Config'];
     if (!is_array($configs)) {
@@ -185,11 +194,28 @@ class i3WebManager {
           }
         }
       }
+
+      if (array_key_exists('scratchpads', $config)) {
+        $scratchpads = $config['scratchpads'];
+        for($i = 0, $nb = count($scratchpads); $i < $nb; ++$i) {
+          $i3Client = new i3Client($scratchpads[$i]['name']);
+          if (array_key_exists('command', $scratchpads[$i])) {
+            $i3Client->setCommand($scratchpads[$i]['command']);
+          }
+          if (array_key_exists('arguments', $scratchpads[$i])) {
+            $i3Client->setArguments($scratchpads[$i]['arguments']);
+          }
+          $i3Config->addScratchpad($i3Client);
+        }
+      }
       $this->configs[] = $i3Config;
     }
     $this->is_loaded = true;
   }
 
+  /**
+   * Run method
+   */
   public function run($name, i3Msg\i3MsgInterface $i3Msg) {
     $config = $this->getConfigs($name);
 
@@ -204,8 +230,16 @@ class i3WebManager {
         }
       }
     }
+    $scratchpads = $config->getScratchpads();
+    foreach ($scratchpads as $sc_id => $scratchpad) {
+      $i3Msg->open_scratchpad($scratchpad);
+    }
   }
 
+  /* Private Methods */
+  /**
+   * Generate yaml
+   */
   private function generateYaml() {
     $configs = array();
     for ($i = 0, $nb = count($this->configs); $i < $nb; ++$i) {

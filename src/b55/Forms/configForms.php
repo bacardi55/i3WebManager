@@ -8,6 +8,14 @@ class configForms {
     $this->form_factory = $form_factory;
   }
 
+  /**
+   * Add/Edit config forms.
+   *
+   * @param Array $data
+   *   $data to send to the createBuilder.
+   *
+   * @return SfForm
+   */
   public function getAddForm($data = array()) {
     $form = $this->form_factory->createBuilder('form', $data)
       ->add('config_name', 'text')
@@ -17,6 +25,14 @@ class configForms {
     return $form;
   }
 
+  /**
+   * Add/Edit Client form.
+   *
+   * @param Array $data
+   *   $data to send to the createBuilder.
+   *
+   * @return SfForm
+   */
   public function getClientForm($data = array()) {
     $form = $this->form_factory->createBuilder('form', $data)
       ->add('is_new', 'hidden')
@@ -28,6 +44,14 @@ class configForms {
     return $form;
   }
 
+  /**
+   * Add/Edit workspace.
+   *
+   * @param Array $data
+   *   $data to send to the createBuilder.
+   *
+   * @return SfForm
+   */
   public function getWorkspaceForm($data = array()) {
     $form = $this->form_factory->createBuilder('form', $data)
       ->add('name', 'text')

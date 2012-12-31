@@ -8,6 +8,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use b55\i3WebManager as i3wm;
 use b55\Entity\i3Client as i3Client;
 use b55\Entity\i3Workspace as i3Workspace;
+use b55\Entity\i3Scratchpad as i3Scratchpad;
 use b55\Forms;
 
 require_once __DIR__ . '/Resources/lib/utils.php';
@@ -50,7 +51,6 @@ $app->match('/config/new', function (Request $request) use ($app) {
       $default_file = getYamlFilePathFromApp($app);
       $i3wm->save($default_file);
 
-      // Redirect to naming workspace page.
       return $app->redirect('/config/'.$data['config_name']);
     }
   }
@@ -64,7 +64,7 @@ $app->match('/config/new', function (Request $request) use ($app) {
 $app->match('/config/{config_name}', function ($config_name) use ($app) {
   $i3wm = $app['i3wm'];
   if (!is_string($config_name)) {
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
   }
 
   $conf = $i3wm->getConfigs($config_name);
@@ -77,7 +77,7 @@ $app->match('/config/{config_name}', function ($config_name) use ($app) {
 /* Remove config */
 $app->match('/config/{config_name}/remove', function ($config_name) use ($app) {
   if (!is_string($config_name)) {
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
   }
 
   $i3wm = $app['i3wm'];
@@ -88,12 +88,12 @@ $app->match('/config/{config_name}/remove', function ($config_name) use ($app) {
 
 
 /* List of clients */
-$app->match('/config/{config_name}/{workspace_name}',
+$app->match('/config/{config_name}/workspace/{workspace_name}',
   function (Request $request, $config_name, $workspace_name) use ($app) {
 
   $i3wm = $app['i3wm'];
   if (!is_string($config_name) || !is_string($workspace_name)) {
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
   }
 
   $i3Config = $i3wm->getConfigs($config_name);
@@ -142,11 +142,11 @@ $app->match('/config/{config_name}/{workspace_name}',
 });
 
 /* Remove workspace */
-$app->match('/config/{config_name}/{workspace_name}/remove',
+$app->match('/config/{config_name}/workspace/{workspace_name}/remove',
   function ($config_name, $workspace_name) use ($app) {
 
   if (!is_string($config_name) || !is_string($workspace_name)) {
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
   }
   $i3wm = $app['i3wm'];
   $i3wm->removeWorkspace($config_name, $workspace_name);
@@ -155,14 +155,14 @@ $app->match('/config/{config_name}/{workspace_name}/remove',
 });
 
 /* Edit a client */
-$app->match('/config/{config_name}/{workspace_name}/{client_name}',
+$app->match('/config/{config_name}/workspace/{workspace_name}/{client_name}',
   function (Request $request, $config_name, $workspace_name, $client_name = NULL) use ($app) {
 
   $i3wm = $app['i3wm'];
   if (!is_string($config_name) || !is_string($workspace_name)
     || ($client_name && !is_string($client_name))) {
 
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
   }
 
   $i3Config = $i3wm->getConfigs($config_name);
@@ -204,8 +204,7 @@ $app->match('/config/{config_name}/{workspace_name}/{client_name}',
         $i3wm->save();
       }
 
-
-      return $app->redirect('/config/' . $config_name . '/' .  $workspace_name);
+      return $app->redirect('/config/' . $config_name . '/workspace/' .  $workspace_name);
     }
   }
 
@@ -217,20 +216,83 @@ $app->match('/config/{config_name}/{workspace_name}/{client_name}',
   ));
 });
 /* Remove client */
-$app->match('/config/{config_name}/{workspace_name}/{client_name}/remove',
+$app->match('/config/{config_name}/workspace/{workspace_name}/{client_name}/remove',
   function ($config_name, $workspace_name, $client_name) use ($app) {
 
   if (!is_string($config_name) || !is_string($workspace_name)
     || !is_string($client_name)) {
 
-    return new Response($app['twig']->render($page, array('code' => '404')), $code);
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
   }
 
   $i3wm = $app['i3wm'];
   $i3wm->load();
   $i3wm->removeClient($config_name, $workspace_name, $client_name);
 
-  return $app->redirect('/config/' . $config_name . '/' . $workspace_name);
+  return $app->redirect('/config/' . $config_name . '/workspace/' . $workspace_name);
+});
+
+/* Add Scratchpad */
+$app->match('/config/{config_name}/scratchpad/{client_name}',
+  function (Request $request, $config_name, $client_name) use ($app) {
+
+  if (!is_string($config_name) || !is_string($client_name)) {
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
+  }
+
+  $i3wm = $app['i3wm'];
+
+  $data = array();
+  if ($client_name == 'new') {
+    $i3Client = new i3Client('new');
+    $data['is_new'] = 1;
+  }
+  else {
+    $i3Client = $i3wm->getConfigs($config_name)->getScratchpads($client_name);
+
+    if ($i3Client instanceof i3Client) {
+      $data = array(
+        'name' => $i3Client->getName(),
+        'command' => $i3Client->getCommand(),
+        'arguments' => $i3Client->getArguments(),
+        'is_new' => 0,
+      );
+    }
+  }
+
+  $i3Form = $app['i3wm_forms']['configForm'];
+  $form = $i3Form->getClientForm($data);
+
+  if ('POST' === $request->getMethod()) {
+    $form->bind($request);
+    if ($form->isValid()) {
+      $data = $form->getData();
+      $i3Client->setName($data['name']);
+      $i3Client->setCommand($data['command']);
+      $i3Client->setArguments($data['arguments']);
+
+      if ($data['is_new'] == 1) {
+        $i3wm->getConfigs($config_name)->addScratchpad($i3Client);
+      }
+      $i3wm->save();
+
+      return $app->redirect('/config/' . $config_name);
+    }
+  }
+
+  return $app['twig']->render('config/scratchpad.html', array(
+    'config_name' => $config_name,
+    'client' => $i3Client,
+    'form' => $form->createView(),
+  ));
+
 });
 
 
+$app->error(function (\Exception $e, $code) use ($app) {
+  if ($app['debug']) {
+    return;
+  }
+  $page = 404 == $code ? '404.html' : '500.html';
+  return new Response($app['twig']->render($page,  array('code' => $code)),  $code);
+});
