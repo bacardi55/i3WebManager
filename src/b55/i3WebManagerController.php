@@ -10,6 +10,7 @@ use b55\Entity\i3Client as i3Client;
 use b55\Entity\i3Workspace as i3Workspace;
 use b55\Entity\i3Scratchpad as i3Scratchpad;
 use b55\Forms;
+use b55\i3ConfigParser;
 
 require_once __DIR__ . '/Resources/lib/utils.php';
 
@@ -302,6 +303,61 @@ $app->match('/config/{config_name}/scratchpad/{client_name}/remove',
   $i3wm->save();
 
   return $app->redirect('/config/' . $config_name);
+});
+
+$app->match('/parse', function (Request $request) use ($app) {
+  $upload = false;
+  $config_file = false;
+  $form_view = null;
+  $i3PparsedConfig = null;
+
+  $i3wm = $app['i3wm'];
+  $i3Form = $app['i3wm_forms']['configForm'];
+  $form = $i3Form->getUploadConfigForm();
+
+  if ('POST' === $request->getMethod() || is_file(is_file($app['i3_config_file']))) {
+    if ($request->getMethod() === 'POST') {
+      $form->bind($request);
+      if ($form->isValid()) {
+        $dir = __DIR__ . '/Resources';
+        $data = $form->getData();
+        $file = $form['config_file']->getData();
+        $ret = $file->move($dir, $file->getClientOriginalName());
+        $filename = $file->getClientOriginalName();
+        $file = $dir . '/' . $filename;
+      }
+    }
+    else {
+      $file = $app['i3_config_file'];
+    }
+
+    $i3ConfigParser = new i3ConfigParser($file);
+    $i3ParsedConfig = $i3ConfigParser->parse();
+    $i3wm->setDefaultWorkspaces($i3ParsedConfig);
+    $i3wm->save();
+
+    return $app->redirect('/default_workspaces');
+  }
+  else {
+    $upload = true;
+  }
+
+  return $app['twig']->render('parse.html', array(
+    'upload_form' => $upload,
+    'config_file' => $config_file,
+    'form' => $form->createView(),
+    'config' => $i3ParsedConfig,
+  ));
+});
+
+$app->match('/default_workspaces', function() use ($app) {
+  $i3wm = $app['i3wm'];
+  $i3wm->load();
+  $defaultWorkspaces = $i3wm->getConfiguration()->getDefaultWorkspaces();
+
+  return $app['twig']->render('default_workspaces.html', array(
+    'defaultWorkspaces' => $defaultWorkspaces,
+  ));
 });
 
 $app->error(function (\Exception $e, $code) use ($app) {

@@ -61,4 +61,20 @@ class configForms {
 
     return $form;
   }
+
+  /**
+   * Upload your config file form.
+   *
+   * @param Array $data
+   *   $data to send to the createBuilder method.
+   *
+   * @return SfForm.
+   */
+  public function getUploadConfigForm($data = array()) {
+    $form = $this->form_factory->createBuilder('form', $data)
+      ->add('config_file', 'file')
+      ->getForm();
+
+    return $form;
+  }
 }
