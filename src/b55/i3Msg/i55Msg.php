@@ -23,16 +23,8 @@ class i55Msg implements i3MsgInterface {
   }
 
   public function open_scratchpad(i3Client $i3Client) {
-    /*
-    $i3Client->getName();
-    $this->open_client($i3Client);
-    $cmd = $this->get_send_to_scratchpad_command($i3Client);
-    exec($cmd);
-    */
-    if ($cmd = $this->get_send_to_scratchpad_command($i3Client)) {
-      print($cmd);
-      exec($cmd);
-    }
+    // TODO: http://faq.i3wm.org/question/954/open-window-as-a-scratchpad/
+    return;
   }
 
   public function set_layout($layout, $workspace = NULL) {
@@ -45,11 +37,5 @@ class i55Msg implements i3MsgInterface {
 
   protected function get_goto_command(i3Workspace $i3Workspace) {
     return 'i3-msg workspace ' . $i3Workspace->getName() . ';';
-  }
-
-  protected function get_send_to_scratchpad_command(i3Client $i3Client) {
-    if ($cmd = $i3Client->getFullCommand()) {
-      return 'i3-msg exec ' . $cmd . ', move scratchpad';
-    }
   }
 }

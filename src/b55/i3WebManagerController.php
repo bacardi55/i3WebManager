@@ -289,6 +289,20 @@ $app->match('/config/{config_name}/scratchpad/{client_name}',
 
 });
 
+$app->match('/config/{config_name}/scratchpad/{client_name}/remove',
+  function ($config_name, $client_name) use ($app) {
+
+  if (!is_string($config_name)) {
+    return new Response($app['twig']->render('404.html', array('code' => 404)), 404);
+  }
+
+  $i3wm = $app['i3wm'];
+  $i3wm->load();
+  $i3wm->getConfigs($config_name)->removeScratchpad($client_name);
+  $i3wm->save();
+
+  return $app->redirect('/config/' . $config_name);
+});
 
 $app->error(function (\Exception $e, $code) use ($app) {
   if ($app['debug']) {
