@@ -3,18 +3,18 @@ i3WebManager
 
 Summary
 =======
-i3WebManager has a simple purpose. Help you start your day more quickly by starting all the app you need. 
+i3WebManager has a simple purpose. Help you start your day more quickly by starting all the app you need.
 
 Purpose of i3WebManager
 =======================
 Have you ever start your laptop and thinking about all the app you need to open ?
-I open the same apps every day at work and put my clients in order in all my workspace at the start of my day (I don't hibernate a lot because I need to boot windows to play ^^'). 
+I open the same apps every day at work and put my clients in order in all my workspace at the start of my day (I don't hibernate a lot because I need to boot windows to play ^^').
 Even if I do it all thanks to the keybinds, it's boring me to do it every day.
 
 The simple solution would be to use the build in system in i3 that let you launch app from the i3/config file. In this file, you can even assigned client to specific workspace.
-But I didn't manage to make it work properly and it doesn't fit all my need because depending on where I use my laptop, i need some app or some other. 
+But I didn't manage to make it work properly and it doesn't fit all my need because depending on where I use my laptop, i need some app or some other.
 
-This is why i started this web application. 
+This is why i started this web application.
 This app is a web interface that let you choose which application will open in which workspace.
 
 In more details, this app handles as many configuration as you want. In each configuration, you will define the workspace that you use in your configuration.
@@ -22,17 +22,7 @@ Then, in each workspace, you will be able to add application to launch in it.
 
 When you're finished with the configuration, this app has a cli php app that will run your configuration through i3-msg by going to the wanted workspace and openning clients in them.
 
-This application will be able to handle all layouts and {h,v}split in the future, for now, only assigning a workspace to a client.
-
-
-Description
-===========
-i3wm let you launch software when it start. Plus it let you assign window to workspace.
-My need everyvmorning at work is more complex. I want to open specific client in a specific state in a specific layout. Plus, I have a lot of trouble to do it in the config file.
-
-I could have done a bash script with i3msg to do the same but I wanted an easy way to modify my configuration and I wanted a way to handle more than one configuration. I don't open the same app in the same way at work or at home (you could even have a configuration for «quick start» with only a web browser).
-
-I like to release early, release often so be carreful when trying it :D.
+This application will be able to handle all layouts and {h,v}split in the future, for now, only assigning a workspace to a client and set a default layout per workspace.
 
 
 Install
@@ -50,7 +40,7 @@ src/b55/Resources/i3Config.yml
 ```
 
 After creating your config file, you need to launch to i3CliManager. This console will launch your app in your workspace.
-To launch i3CliManager, 
+To launch i3CliManager,
 ```
 php console i3CliManager:start [config_name]
 ```
@@ -58,6 +48,12 @@ with [config_name] the name of the config you want to launch.
 
 Current State
 =============
+**Tag 0.3-alpha**:
+New feature: Default layout per workspace.
+Thanks to this, you can choose a layout for your workspace. When selecting a layout
+the app will make sure that the choosen layout will be set for the workspace.
+(You can not create split or layout in layout yet).
+
 **Tag 0.2-alpha**:
 You can now install the app, run it and create a new configuration from scratch.
 For now, you can only add client to workspace. You can't do split or layout for now, but you'll be able to one day…
@@ -67,12 +63,12 @@ php console i3CliManager:start test
 ```
 You can't start it in a tty though, your i3session must be started.
 
-**Tag 0.1** : 
+**Tag 0.1** :
 The app is currently useless. The load/saving part work though and that's the most important part.
 
 FAQ
 ===
-**Why PHP**: 
+**Why PHP**:
 I know that most of the i3 users wouldn't have made it in PHP but here are some of my reasons :
   - I'm a PHP developer;
   - I wanted to create my first app with the Silex micro framework;
