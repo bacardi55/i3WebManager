@@ -8,3 +8,5 @@ $app['i3WebManager'] = array(
     'name' => 'i3config.yml',
   )
 );
+
+$app['i3_config_file'] = __DIR__ . '/../src/b55/Resources/config';
