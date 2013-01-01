@@ -6,4 +6,5 @@ composer.phar
 silex.log
 *.swp
 session.vim
-
+tags
+*.log
