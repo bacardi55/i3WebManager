@@ -18,7 +18,7 @@ class i55Msg implements i3MsgInterface {
       $cmd = escapeshellcmd($cmd);
       exec('nohup ' . $cmd . ' > /dev/null 2>&1 &');
       // Make that configurable.
-      sleep(1);
+      sleep(2);
     }
   }
 
@@ -35,6 +35,11 @@ class i55Msg implements i3MsgInterface {
     }
   }
 
+  public function set_layout($layout, $workspace = NULL) {
+    $cmd = 'i3-msg layout ' . $layout;
+    exec($cmd);
+    sleep(0.5);
+  }
 
   /* Protected methods */
 

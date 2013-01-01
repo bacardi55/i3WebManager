@@ -3,12 +3,16 @@ namespace b55\Entity;
 
 use b55\Entity\i3Client as i3Client;
 
+require_once __DIR__ . '/../Resources/lib/utils.php';
+
 class i3Workspace {
   protected $containers;
   protected $name;
+  protected $defautLayout;
 
   public function __construct($name) {
     $this->setName($name);
+    $this->defaultLayout = 'default';
     $this->containers = array();
   }
 
@@ -18,6 +22,17 @@ class i3Workspace {
 
   public function setName($name) {
     $this->name = $name;
+  }
+
+  /* Default Layout */
+  public function getDefaultLayout() {
+    return $this->defaultLayout;
+  }
+
+  public function setDefaultLayout($defaultLayout) {
+    if (array_key_exists($defaultLayout, getI3Layouts())) {
+      $this->defaultLayout = $defaultLayout;
+    }
   }
 
   /* Containers */
@@ -107,6 +122,7 @@ class i3Workspace {
     $return = array(
       'name' => $this->name,
       'type' => 'i3Workspace',
+      'default_layout' => $this->defaultLayout,
       'containers' => $containers
     );
 

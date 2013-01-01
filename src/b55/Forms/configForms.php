@@ -52,9 +52,10 @@ class configForms {
    *
    * @return SfForm
    */
-  public function getWorkspaceForm($data = array()) {
+  public function getWorkspaceForm($data = array(), $layouts) {
     $form = $this->form_factory->createBuilder('form', $data)
       ->add('name', 'text')
+      ->add('default_layout', 'choice', array('choices' => $layouts))
       ->add('is_new', 'hidden')
       ->getForm();
 

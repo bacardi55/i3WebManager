@@ -109,13 +109,14 @@ $app->match('/config/{config_name}/workspace/{workspace_name}',
     if ($i3Workspace instanceof i3Workspace) {
       $data = array(
         'name' => $i3Workspace->getName(),
+        'default_layout' => $i3Workspace->getDefaultLayout(),
         'is_new' => 0,
       );
     }
   }
 
   $i3Form = $app['i3wm_forms']['configForm'];
-  $form = $i3Form->getWorkspaceForm($data);
+  $form = $i3Form->getWorkspaceForm($data, getI3Layouts());
 
   if ('POST' === $request->getMethod()) {
     $form->bind($request);
@@ -123,12 +124,12 @@ $app->match('/config/{config_name}/workspace/{workspace_name}',
       $data = $form->getData();
       if ($data['is_new'] == 1) {
         $i3Config->addWorkspace(new i3Workspace($data['name']));
-        $i3wm->save();
       }
       else {
         $i3Workspace->setName($data['name']);
-        $i3wm->save();
+        $i3Workspace->setDefaultLayout($data['default_layout']);
       }
+      $i3wm->save();
       return $app->redirect('/config/' . $config_name);
     }
   }

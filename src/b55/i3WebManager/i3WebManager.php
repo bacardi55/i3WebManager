@@ -165,6 +165,7 @@ class i3WebManager {
         $workspaces = $config['workspaces'];
         for ($i = 0, $nb = count($workspaces); $i < $nb; ++$i) {
           $workspace = new i3Workspace($workspaces[$i]['name']);
+          $workspace->setDefaultLayout($workspaces[$i]['default_layout']);
 
           // In the next version, this part will become way more
           // complicated (containers in containers, …).
@@ -222,6 +223,11 @@ class i3WebManager {
     $workspaces = $config->getWorkspaces();
     foreach ($workspaces as $wk_id => $workspace) {
       $i3Msg->goto_workspace($workspace);
+
+      if ($workspace->getDefaultLayout() != 'default') {
+        $i3Msg->set_layout($workspace->getDefaultLayout());
+      }
+
       $containers = $workspace->getContainers();
       foreach ($containers as $ct_id => $container) {
         $clients = $container->getClients();
