@@ -49,12 +49,14 @@ with [config_name] the name of the config you want to launch.
 Current State
 =============
 **Tag 0.3.1-alpha**: (**Don't use the 0.3-alpha, there is a fatal error)
+
 New feature: Default layout per workspace.
 Thanks to this, you can choose a layout for your workspace. When selecting a layout
 the app will make sure that the choosen layout will be set for the workspace.
 (You can not create split or layout in layout yet).
 
 **Tag 0.2-alpha**:
+
 You can now install the app, run it and create a new configuration from scratch.
 For now, you can only add client to workspace. You can't do split or layout for now, but you'll be able to one day…
 Plus, the console is also ready. So you can create your config in your web browser, and then run this command line :
