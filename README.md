@@ -48,7 +48,7 @@ with [config_name] the name of the config you want to launch.
 
 Current State
 =============
-**Tag 0.3-alpha**:
+**Tag 0.3.1-alpha**: (**Don't use the 0.3-alpha, there is a fatal error)
 New feature: Default layout per workspace.
 Thanks to this, you can choose a layout for your workspace. When selecting a layout
 the app will make sure that the choosen layout will be set for the workspace.
