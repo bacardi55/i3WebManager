@@ -1,5 +1,11 @@
 Example:
 =======
+There is two files in this directory (except the readme file).
+
+***i3CliManager.sh***
+This little script help me launch the config I need directly via dmenu (you need to add this script in your $PATH and make it executable to do so).
+
+***i3config.yml***
 The i3config.yml file is an config file example (my own config actualy).
 I have two configurations:
 
