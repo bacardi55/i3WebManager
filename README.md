@@ -29,8 +29,7 @@ Install
 =======
 To install, just do :
 ```bash
-git clone https://github.com/bacardi55/i3WebManager/
-git checkout 0.3.1-alpha
+git clone https://github.com/bacardi55/i3WebManager/ && cd i3WebManager && git checkout 0.3.1-alpha
 curl -s http://getcomposer.org/installer | php
 php composer.phar install
 ```
