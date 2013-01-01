@@ -8,7 +8,7 @@ require_once __DIR__ . '/../Resources/lib/utils.php';
 class i3Workspace {
   protected $containers;
   protected $name;
-  protected $defautLayout;
+  protected $defaultLayout;
 
   public function __construct($name) {
     $this->setName($name);
