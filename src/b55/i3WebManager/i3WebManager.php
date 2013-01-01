@@ -7,6 +7,7 @@ use b55\Entity\i3Config;
 use b55\Entity\i3Workspace;
 use b55\Entity\i3Container;
 use b55\Entity\i3Client;
+use b55\Entity\i3Configuration as i3Configuration;
 use b55\i3Msg as i3msg;
 
 class i3WebManager {
@@ -14,10 +15,13 @@ class i3WebManager {
   protected $configs;
   protected $plain_config;
   protected $is_loaded = false;
+  protected $configuration;
 
   public function __construct($file, $load = true) {
     $this->file = $file;
     $this->configs = array();
+    $this->default_workspaces = array();
+    $this->configuration = new i3Configuration();
 
     if (file_exists($file)) {
       $this->plain_config = Yaml::parse($file);
@@ -120,6 +124,15 @@ class i3WebManager {
     }
   }
 
+  /* Configuration */
+  public function getConfiguration() {
+    return $this->configuration;
+  }
+
+  public function setConfiguration(i3Configuration $i3Configuration) {
+    $this->configuration = $i3Configuration;
+  }
+
   /**
    * Return if the config exists or not
    *
@@ -209,8 +222,22 @@ class i3WebManager {
           $i3Config->addScratchpad($i3Client);
         }
       }
+
       $this->configs[] = $i3Config;
     }
+
+    if (array_key_exists('configuration', $this->plain_config)) {
+      $i3Configuration = new i3Configuration();
+      if (array_key_exists('default_workspaces', $this->plain_config['configuration'])) {
+        $d_workspaces = $this->plain_config['configuration']['default_workspaces'];
+        for ($i = 0, $nb = count($d_workspaces); $i < $nb; $i++) {
+          $i3Workspace = new i3Workspace($d_workspaces[$i]['name']);
+          $i3Configuration->addDefaultWorkspace($i3Workspace);
+        }
+      }
+      $this->configuration = $i3Configuration;
+    }
+
     $this->is_loaded = true;
   }
 
@@ -251,9 +278,17 @@ class i3WebManager {
     for ($i = 0, $nb = count($this->configs); $i < $nb; ++$i) {
       $configs[$this->configs[$i]->getName()] = $this->configs[$i]->save();
     }
+    $workspaces = array();
+    for ($i = 0, $nb = count($this->default_workspaces); $i < $nb; ++$i) {
+      $workspaces[$this->default_workspaces[$i]->getName()]
+        = $this->default_workspaces[$i]->save();
+    }
 
-    $configs = array('i3Config' => $configs, 'type' => 'i3Config', 'configuration' => array());
-
+    $configs = array(
+      'i3Config' => $configs,
+      'type' => 'i3Config',
+      'configuration' => $this->configuration->save(),
+    );
     $yaml = Yaml::dump($configs);
     return $yaml;
   }
