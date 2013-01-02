@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Your configuration</h1>
+
+  <p>These are the workspaces that were found in your i3 config file :</p>
+  <ul>
+    {% for workspace in defaultWorkspaces %}
+      <li>{{ workspace.name }}</li>
+    {% else %}
+      No default workspaces was found.
+    {% endfor %}
+  </ul>
+
+  <p>
+  <a href="/parse">Reload your i3 configuration file</a><br />
+  <p>
+
+  <p>
+  <a href="/">homepage</a>
+  </p>
+{% endblock %}

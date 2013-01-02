@@ -25,12 +25,14 @@ $app->match('/', function () use ($app) {
 
   if ($i3wm->is_new() === true) {
     return $app['twig']->render('index.html', array(
-      'configs' => null
+      'configs' => null,
+      'has_configuration' => false,
     ));
   }
   else {
     return $app['twig']->render('index.html', array(
-      'configs' => $i3wm->getConfigsNames()
+      'configs' => $i3wm->getConfigsNames(),
+      'has_configuration' => $i3wm->has_configuration(),
     ));
   }
 });
@@ -309,13 +311,13 @@ $app->match('/parse', function (Request $request) use ($app) {
   $upload = false;
   $config_file = false;
   $form_view = null;
-  $i3PparsedConfig = null;
+  $i3ParsedConfig = null;
 
   $i3wm = $app['i3wm'];
   $i3Form = $app['i3wm_forms']['configForm'];
   $form = $i3Form->getUploadConfigForm();
 
-  if ('POST' === $request->getMethod() || is_file(is_file($app['i3_config_file']))) {
+  if ('POST' === $request->getMethod() || is_file($app['i3_config_file'])) {
     if ($request->getMethod() === 'POST') {
       $form->bind($request);
       if ($form->isValid()) {
@@ -333,10 +335,10 @@ $app->match('/parse', function (Request $request) use ($app) {
 
     $i3ConfigParser = new i3ConfigParser($file);
     $i3ParsedConfig = $i3ConfigParser->parse();
-    $i3wm->setDefaultWorkspaces($i3ParsedConfig);
+    $i3wm->getConfiguration()->setDefaultWorkspaces($i3ParsedConfig);
     $i3wm->save();
 
-    return $app->redirect('/default_workspaces');
+    return $app->redirect('/default_configuration');
   }
   else {
     $upload = true;
@@ -350,12 +352,16 @@ $app->match('/parse', function (Request $request) use ($app) {
   ));
 });
 
-$app->match('/default_workspaces', function() use ($app) {
+$app->match('/new_configuration', function () use ($app) {
+  //TODO
+});
+
+$app->match('/default_configuration', function() use ($app) {
   $i3wm = $app['i3wm'];
   $i3wm->load();
   $defaultWorkspaces = $i3wm->getConfiguration()->getDefaultWorkspaces();
 
-  return $app['twig']->render('default_workspaces.html', array(
+  return $app['twig']->render('default_configuration.html', array(
     'defaultWorkspaces' => $defaultWorkspaces,
   ));
 });

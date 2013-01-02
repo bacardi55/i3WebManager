@@ -151,6 +151,14 @@ class i3WebManager {
     return false;
   }
 
+  public function has_configuration () {
+    if (!$this->is_loaded) {
+      $this->load();
+    }
+
+    return (count($this->configuration));
+  }
+
   /**
    * Save method
    */

@@ -13,11 +13,7 @@ class i3Configuration {
   }
 
   public function setDefaultWorkspaces($workspaces) {
-    for ($i = 0, $nb = count($workspaces); $i < $nb; ++$i) {
-      if ($workspaces[$i] instanceof i3Workspace) {
-        $this->default_workspaces[] = $workspaces[$i];
-      }
-    }
+    $this->default_workspaces = $workspaces;
   }
 
   public function addDefaultWorkspace(i3Workspace $i3Workspace) {

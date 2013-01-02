@@ -24,8 +24,12 @@
     {% endfor %}
   </ul>
   {% endif %}
-
   <p><a href="/config/new">Create a new configuration</a></p>
-  <p><a href="/parse">Parse your i3/config file to pre-define your workpaces</a></p>
+
+  {% if has_configuration == true %}
+    <a href="/default_configuration">See your default configuration</a>
+  {% else %}
+    You don't have a default configuration, <a href="/new_configuration">start one?</a>
+  {% endif %}
 
 {% endblock %}
